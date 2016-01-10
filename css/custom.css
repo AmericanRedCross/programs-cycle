@@ -1,0 +1,55 @@
+/*.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}*/
+
+.legend-item-color {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+}
+
+svg {
+  font: 10px sans-serif;
+}
+
+.area {
+  fill: #dd4f53;
+  clip-path: url(#clip);
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
