@@ -66,8 +66,8 @@ function buildTimeline(){
       })
   });
 
-  var tlmargin = {top: 10, right: 10, bottom: 60, left: 80},
-    tlmargin2 = {top: 370, right: 10, bottom: 20, left: 80},
+  var tlmargin = {top: 10, right: 20, bottom: 60, left: 80},
+    tlmargin2 = {top: 370, right: 20, bottom: 20, left: 80},
     tlwidth = $('#timeline-graph').innerWidth() - tlmargin.left - tlmargin.right,
     tlheight = 400 - tlmargin.top - tlmargin.bottom, //390
     tlheight2 = 400 - tlmargin2.top - tlmargin2.bottom; // 50
@@ -75,14 +75,21 @@ function buildTimeline(){
   var x = d3.time.scale().range([0, tlwidth]),
       x2 = d3.time.scale().range([0, tlwidth]),
       y = d3.scale.linear().range([tlheight, 0]),
+      yPrj = d3.scale.linear().range([tlheight, 0]),
       y2 = d3.scale.linear().range([tlheight2, 0]);
 
   var xAxis = d3.svg.axis().scale(x).orient("bottom"),
       xAxis2 = d3.svg.axis().scale(x2).orient("bottom"),
-      yAxis = d3.svg.axis().scale(y).orient("left");
+      yAxis = d3.svg.axis().scale(y).orient("left"),
+      yAxisPrj = d3.svg.axis().scale(yPrj).orient("right");
+
   brush = d3.svg.brush()
       .x(x2)
       .on("brush", brushed);
+
+  var linePrj = d3.svg.line()
+      .x(function(d) { return x(new Date(d.key)); })
+      .y(function(d) { return yPrj(d.values.totalprj); });
 
   var area = d3.svg.area()
       .interpolate("step")
@@ -115,6 +122,7 @@ function buildTimeline(){
 
   x.domain([minDate, maxDate]);
   y.domain([0, d3.max(graphData, function(d) { return d.values.totalbudget; })]);
+  yPrj.domain([0, d3.max(graphData, function(d) { return d.values.totalprj; })]);
   x2.domain(x.domain());
   y2.domain(y.domain());
 
@@ -122,6 +130,11 @@ function buildTimeline(){
     .datum(graphData)
     .attr("class", "area")
     .attr("d", area);
+
+  focus.append("path")
+    .datum(graphData)
+    .attr("class", "prj-line")
+    .attr("d", linePrj);
 
   focus.append("g")
     .attr("class", "x axis")
@@ -131,6 +144,11 @@ function buildTimeline(){
   focus.append("g")
     .attr("class", "y axis")
     .call(yAxis);
+
+  focus.append("g")
+    .attr("class", "yPrj axis")
+    .attr("transform", "translate(" + tlwidth + " ,0)")
+    .call(yAxisPrj);
 
   context.append("path")
     .datum(graphData)
@@ -152,16 +170,16 @@ function buildTimeline(){
   function brushed() {
     // Use x.domain to filter the data, then find the max and min duration of this new set, then set y.domain to that
     x.domain(brush.empty() ? x2.domain() : brush.extent());
-    var totalbudgetFiltered = graphData.filter(function(d, i) {
-      if ( (new Date(d.key) >= x.domain()[0]) && (new Date(d.key) <= x.domain()[1]) ) {
-        return d.values.totalbudget;
-      }
+    var dataDateFiltered = graphData.filter(function(d, i) {
+      return (new Date(d.key) >= x.domain()[0]) && (new Date(d.key) <= x.domain()[1]);
     })
-    y.domain([0, d3.max(totalbudgetFiltered.map(function(d) { return d.values.totalbudget; }))]);
+    y.domain([0, d3.max(dataDateFiltered.map(function(d) { return d.values.totalbudget; }))]);
+    yPrj.domain([0, d3.max(dataDateFiltered.map(function(d) { return d.values.totalprj; }))]);
     focus.select(".area").transition().duration(1500).ease("sin-in-out").attr("d", area);
+    focus.select(".prj-line").transition().duration(1500).ease("sin-in-out").attr("d", linePrj);
     focus.select(".x.axis").call(xAxis);
     focus.select(".y.axis").transition().duration(1500).ease("sin-in-out").call(yAxis);
-
+    focus.select(".yPrj.axis").transition().duration(1500).ease("sin-in-out").call(yAxisPrj);
     drawPies(x.domain());
   }
 

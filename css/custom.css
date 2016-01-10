@@ -30,6 +30,11 @@
 svg {
   font: 10px sans-serif;
 }
+.prj-line {
+  fill: none;
+  stroke: red;
+  clip-path: url(#clip);
+}
 
 .area {
   fill: #dd4f53;
