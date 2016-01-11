@@ -1,0 +1,27 @@
+{
+  "name": "",
+  "version": "",
+  "description": "",
+  "main": "programs-cycle.js",
+  "dependencies": {
+    "express": "~3.4.4",
+    "passport": "~0.1.17",
+    "passport-http": "~0.2.2",
+    "pm2": "^0.12.16",
+    "util": "~0.4.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "",
+  "license": "",
+  "bugs": {
+    "url": ""
+  },
+  "homepage": ""
+}

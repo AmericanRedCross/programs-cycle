@@ -1,3 +1,8 @@
+secure/data/*
+!secure/data/data.txt
+userauth.js
+node_modules
+
 # Compiled source #
 ###################
 *.com
