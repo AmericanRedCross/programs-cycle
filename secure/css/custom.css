@@ -65,3 +65,20 @@ svg {
   fill: none;
   pointer-events: all;
 }
+
+#calendar-graph text {
+  pointer-events: none;
+}
+
+#tooltip {
+    position:absolute;
+    z-index:999;
+    font-size:14px;
+    color: #1a1a1a;
+    background-color: rgba(245,245,245,1);
+    border-radius: 3px;
+    padding: 3px 8px;
+}
+#tooltip:empty {
+    display:none;
+}

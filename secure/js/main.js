@@ -292,7 +292,7 @@ function drawPies(dates){
 // ########## //
 ////////////////
 
-donorStartPieData = d3.nest()
+var donorStartPieData = d3.nest()
   .key(function(d) { return d.donor; })
   .rollup(function(values){
     return d3.sum(values, function(d) {
@@ -301,7 +301,7 @@ donorStartPieData = d3.nest()
   })
   .entries(data.filter(function(d){ return (d.start <= startDate && d.end >= startDate); }))
 
-donorEndPieData = d3.nest()
+var donorEndPieData = d3.nest()
   .key(function(d) { return d.donor; })
   .rollup(function(values){
     return d3.sum(values, function(d) {
@@ -425,7 +425,7 @@ donorEndLegend.sort(function(a, b) {
 // ################## //
 ////////////////////////
 
-businessStartPieData = d3.nest()
+var businessStartPieData = d3.nest()
   .key(function(d) { return d.businessunit; })
   .rollup(function(values){
     return d3.sum(values, function(d) {
@@ -434,7 +434,7 @@ businessStartPieData = d3.nest()
   })
   .entries(data.filter(function(d){ return (d.start <= startDate && d.end >= startDate); }))
 
-businessEndPieData = d3.nest()
+var businessEndPieData = d3.nest()
   .key(function(d) { return d.businessunit; })
   .rollup(function(values){
     return d3.sum(values, function(d) {
@@ -532,6 +532,65 @@ businessEndLegend.sort(function(a, b) {
   return b.values - a.values;
 })
 
+drawCalendar();
+
+}
+
+function drawCalendar(){
+
+
+  d3.select('#calendar-graph').select('svg').remove();
+
+  var calendarData = data.filter(function(d){
+    return ((d.start < endDate && d.end >= endDate) || (d.start < startDate && d.end >= startDate) || (d.start <= startDate && d.end >= endDate) || (d.start >= startDate && d.end <= endDate));
+  }).sort(function(a, b) {
+    return b.budget - a.budget;
+  })
+
+  var margin = {top: 25, right: 10, bottom: 10, left: 10},
+      width = $('#calendar-graph').innerWidth(),
+      barheight = 20,
+      calendarGraph = d3.select('#calendar-graph').append('svg');
+
+  calendarGraph.attr("width", width + margin.left + margin.right)
+    .attr("height", (barheight * calendarData.length) + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");;
+
+  var x = d3.time.scale()
+      .range([0, width - margin.left - margin.right])
+      .domain([startDate, endDate]);
+
+  var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient("top");
+
+  var bar = calendarGraph.selectAll('g')
+    .data(calendarData).enter().append('g')
+    .attr("transform", function(d, i) { return "translate(" + margin.left + "," + (i * barheight + margin.top) + ")"; })
+  bar.append('rect')
+    .attr("x", function(d) { return x(d.start); })
+    .attr("width", function(d){ return x(d.end) - x(d.start) })
+    .attr("height", barheight - 1)
+    .attr("fill", function(d){ return donorColor(d.donor) })
+    .on("mouseover", function(d){
+        var tooltipText = '<small><u>' + d.name + ' </u></br>' +
+        '<b>start:</b> ' + dateString(d.start) + ' <b>/ end:</b> ' + dateString(d.end) + '<br>' +
+        '<b>donor:</b> ' + d.donor + '<br>' +
+        '<b>budget:</b> ' + currency(d.budget) + '</small>';
+        $('#tooltip').append(tooltipText);
+      })
+      .on("mouseout", function(d){
+        $('#tooltip').empty();
+      });
+  bar.append('text')
+    .attr("x", 10)
+    .attr("y", barheight / 2)
+    .attr("dy", ".35em")
+    .text(function(d) { return d.name; });
+
+  d3.select('#calendar-graph').select('svg').select('g').attr("class", "x axis")
+      .call(xAxis)
 
 }
 
@@ -594,6 +653,18 @@ businessEndLegend.sort(function(a, b) {
 //       .attr("height", function(d) { return height - y(d.values.totalbudget); });
 
 
+
+// tooltip follows cursor
+$(document).ready(function() {
+    $('body').mouseover(function(e) {
+        //Set the X and Y axis of the tooltip
+        $('#tooltip').css('top', e.pageY + 10 );
+        $('#tooltip').css('left', e.pageX + 20 );
+    }).mousemove(function(e) {
+        //Keep changing the X and Y axis for the tooltip, thus, the tooltip move along with the mouse
+        $("#tooltip").css({top:(e.pageY+15)+"px",left:(e.pageX+20)+"px"});
+    });
+});
 
 
 d3.select(window).on("resize", throttle);
