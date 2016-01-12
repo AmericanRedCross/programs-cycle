@@ -18,6 +18,39 @@ var businessColor = d3.scale.category20()
 // Constructs a new ordinal scale with a range of twenty categorical colors
 // https://github.com/mbostock/d3/wiki/Ordinal-Scales#category20
 
+
+var activeFilters = []
+function filterData(){
+  activeFilters = []
+  checkboxes = $("#filter-choices input[type=checkbox]");
+    for (i=0; i<checkboxes.length; i++) {
+      if(checkboxes[i].checked === true) {
+        activeFilters.push({
+          filterKey: checkboxes[i].name,
+          filterValue: checkboxes[i].value
+        })
+      }
+    }
+var y = d3.nest().key(function(d){ return d.filterKey })
+      .rollup(function(values){
+        var valuesArray = [];
+        values.forEach(function(d){
+          valuesArray.push(d.filterValue);
+        });
+        return valuesArray;
+      }).entries(activeFilters)
+console.log(y)
+
+}
+
+
+
+function clearCheckboxes(el){
+  $(el).parent().find("input:checkbox").prop('checked',false)
+  filterData();
+}
+
+
 function resize() {
   // setDimensions();
   // d3.select('svg').remove();
@@ -43,8 +76,70 @@ function fetchData(){
 
     donorColor.domain(data.map(function(d) { return d.donor; }));
     businessColor.domain(data.map(function(d) { return d.businessunit; }))
-    buildTimeline();
+
+    buildFilters();
   });
+}
+
+function buildFilters(){
+  // # get the unique values from the data for all our filter fields
+  var regionArray = [],
+      countryArray = [],
+      donorArray = [],
+      sectorArray = [],
+      businessunitArray = [];
+  $.each(data, function(i,item){
+    item.isdregion.split(",").forEach(function(d){
+      if($.inArray(d, regionArray) === -1){ regionArray.push(d) }
+    });
+    item.countries.split(";").forEach(function(d){
+      if($.inArray(d, countryArray) === -1){ countryArray.push(d) }
+    });
+    if($.inArray(item.donor, donorArray) === -1){ donorArray.push(item.donor) }
+    item.sector.split("; ").forEach(function(d){
+      if($.inArray(d, sectorArray) === -1){ sectorArray.push(d) }
+    });
+    if($.inArray(item.businessunit, businessunitArray) === -1){ businessunitArray.push(item.businessunit) }
+
+  });
+  // # alphabetize them arrays
+  regionArray.sort(d3.ascending())
+  countryArray.sort(d3.ascending())
+  donorArray.sort(d3.ascending())
+  sectorArray.sort(d3.ascending())
+  businessunitArray.sort(d3.ascending())
+  // # add the checkbox elements to each collapse well element
+  d3.select('#collapse-filter-region .filter-checkboxes').selectAll('div').data(regionArray).enter()
+    .append('div').attr('class', 'checkbox').html(function(d){
+      // # "name" is the data key and "value" is the data value
+      return '<label><input type="checkbox" name="isdregion" value="' + d + '" onchange="filterData();">' + d + '</label>'
+    });
+  d3.select('#collapse-filter-country .filter-checkboxes').selectAll('div').data(countryArray).enter()
+    .append('div').attr('class', 'checkbox').html(function(d){
+      return '<label><input type="checkbox" name="countries" value="' + d + '" onchange="filterData();">' + d + '</label>'
+    });
+  d3.select('#collapse-filter-donor .filter-checkboxes').selectAll('div').data(donorArray).enter()
+    .append('div').attr('class', 'checkbox').html(function(d){
+      return '<label><input type="checkbox" name="donor" value="' + d + '" onchange="filterData();">' + d + '</label>'
+    });
+  d3.select('#collapse-filter-sector .filter-checkboxes').selectAll('div').data(sectorArray).enter()
+    .append('div').attr('class', 'checkbox').html(function(d){
+      return '<label><input type="checkbox" name="sector" value="' + d + '" onchange="filterData();">' + d + '</label>'
+    });
+  d3.select('#collapse-filter-businessunit .filter-checkboxes').selectAll('div').data(businessunitArray).enter()
+    .append('div').attr('class', 'checkbox').html(function(d){
+      return '<label><input type="checkbox" name="businessunit" value="' + d + '" onchange="filterData();">' + d + '</label>'
+    });
+  // # only allow one well open at a time
+  $('.collapse').on('show.bs.collapse', function(el){
+    var triggeredId = ($(el.currentTarget).attr('id'));
+    var allCollapse = $('.collapse');
+    $.each(allCollapse, function(i, a){
+      if($(a).attr('id') !== triggeredId){ $(a).collapse('hide'); }
+    })
+  })
+
+  buildTimeline();
 }
 
 

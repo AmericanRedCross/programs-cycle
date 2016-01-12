@@ -20,7 +20,13 @@
 .x.axis path {
   display: none;
 }*/
-
+.btn-filter-collapse {
+  margin-bottom: 8px;
+}
+.filter-checkboxes .checkbox {
+  display: inline-block;
+  margin-right: 8px;
+}
 .legend-item-color {
   width: 10px;
   height: 10px;

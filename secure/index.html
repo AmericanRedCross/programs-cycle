@@ -26,6 +26,75 @@
 <div class="container">
   <h1>Program / Project Life Cycle</h1>
 
+<div id="filter-active-text"></div>
+
+<div id="filter-choices" class="row">
+
+    <button class="btn btn-default btn-xs btn-filter-collapse" type="button" data-toggle="collapse" data-target="#collapse-filter-region" aria-expanded="false" aria-controls="collapse-filter-region">
+    Add ISD region filter(s)
+    </button>
+    <button class="btn btn-default btn-xs btn-filter-collapse" type="button" data-toggle="collapse" data-target="#collapse-filter-country" aria-expanded="false" aria-controls="collapse-filter-country">
+    Add country filter(s)
+    </button>
+    <button class="btn btn-default btn-xs btn-filter-collapse" type="button" data-toggle="collapse" data-target="#collapse-filter-donor" aria-expanded="false" aria-controls="collapse-filter-donor">
+    Add donor filter(s)
+    </button>
+    <button class="btn btn-default btn-xs btn-filter-collapse" type="button" data-toggle="collapse" data-target="#collapse-filter-sector" aria-expanded="false" aria-controls="collapse-filter-sector">
+    Add sector filter(s)
+    </button>
+    <button class="btn btn-default btn-xs btn-filter-collapse" type="button" data-toggle="collapse" data-target="#collapse-filter-businessunit" aria-expanded="false" aria-controls="collapse-filter-businessunit">
+    Add businessunit filter(s)
+    </button>
+
+    <div class="collapse" id="collapse-filter-region">
+    <div class="well">
+      <div><a onclick="clearCheckboxes(this);"><small>clear selection</small></a>
+        <div class="filter-checkboxes">
+            <!-- checkboxes go here  -->
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="collapse" id="collapse-filter-country">
+    <div class="well">
+      <div><a onclick="clearCheckboxes(this);"><small>clear selection</small></a>
+        <div class="filter-checkboxes">
+            <div class="checkbox"><label><input type="checkbox" name="none" value="AFRICA" onchange="console.log('AFRICA');">AFRICA</label></div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="collapse" id="collapse-filter-donor">
+    <div class="well">
+      <div><a onclick="clearCheckboxes(this);"><small>clear selection</small></a>
+        <div class="filter-checkboxes">
+            <!-- checkboxes go here  -->
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="collapse" id="collapse-filter-sector">
+    <div class="well">
+      <div><a onclick="clearCheckboxes(this);"><small>clear selection</small></a>
+        <div class="filter-checkboxes">
+            <!-- checkboxes go here  -->
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="collapse" id="collapse-filter-businessunit">
+    <div class="well">
+      <div><a onclick="clearCheckboxes(this);"><small>clear selection</small></a>
+        <div class="filter-checkboxes">
+            <!-- checkboxes go here  -->
+        </div>
+      </div>
+    </div>
+    </div>
+
+</div> <!-- / #filter-choices.row -->
+
+
 <h3>Total approved budget funding and number of recorded projects</h3>
 <div id="timeline-graph" style="width:100%;"></div>
 
