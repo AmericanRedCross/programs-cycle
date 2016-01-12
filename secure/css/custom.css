@@ -32,6 +32,9 @@
   height: 10px;
   display: inline-block;
 }
+a {
+  cursor: pointer;
+}
 
 svg {
   font: 10px sans-serif;
