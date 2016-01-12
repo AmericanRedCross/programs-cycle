@@ -181,8 +181,8 @@ function buildFilters(){
 var minDate, maxDate, brush, yTl, yPrjTl, y2Tl, yAxisTl, yAxisPrjTl, linePrjTl, areaTl, area2Tl, focusTl, contextTl, xTl, xAxisTl
 function buildTimeline(){
 
-  minDate = d3.min(data, function(d) { return d.start });
-  maxDate = d3.max(data, function(d) { return d.end });
+  minDate = d3.time.week.floor(d3.min(data, function(d) { return d.start }));
+  maxDate = d3.time.week.ceil(d3.max(data, function(d) { return d.end }));
 
   var tlmargin = {top: 10, right: 35, bottom: 60, left: 80},
     tlmargin2 = {top: 370, right: 35, bottom: 20, left: 80},
@@ -343,7 +343,7 @@ function drawTimeline(){
     var graphData = d3.nest()
       .key(function(d) { return d; })
       .rollup(function() { return { totalprj: 0, totalbudget: 0 } })
-      .entries(d3.time.day.range(minDate, maxDate, 1))
+      .entries(d3.time.week.range(minDate, maxDate, 1))
     graphData.forEach(function(d){
       filteredData.filter(function(prj){ return prj.start <= new Date(d.key) && prj.end > new Date(d.key); })
         .forEach(function(activeprj){
@@ -351,6 +351,8 @@ function drawTimeline(){
           d.values.totalprj ++;
         })
     });
+
+    console.log(graphData.length);
 
 
     // Use x.domain to filter the data, then find the max and min duration of this new set, then set y.domain to that
