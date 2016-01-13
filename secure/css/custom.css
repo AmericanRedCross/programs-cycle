@@ -20,6 +20,9 @@
 .x.axis path {
   display: none;
 }*/
+.noUi-connect {
+  background: #dd4f53;
+}
 .btn-filter-collapse {
   margin-bottom: 8px;
 }

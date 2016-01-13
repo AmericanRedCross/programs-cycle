@@ -1,4 +1,5 @@
 var data, filteredData;
+var sliderBudgetRange = document.getElementById('slider-budget-range');
 var minDateFilter, maxDateFilter;
 // HELPERS
 var parseDate = d3.time.format('%m/%d/%Y').parse;
@@ -16,6 +17,10 @@ var businessColor = d3.scale.category20()
 
 var activeFilters = []
 function filter(){
+  // # what's the budge range?
+  var sliderValues = sliderBudgetRange.noUiSlider.get();
+  var minBudget = parseInt(sliderValues[0]);
+  var maxBudget = parseInt(sliderValues[1]);
   // # look at all the checkboxes and record whats checked
   activeFilters = []
   checkboxes = $("#filter-choices input[type=checkbox]");
@@ -48,12 +53,13 @@ function filter(){
     keyGroupHtml += valueGroups.join(" <small>OR</small> ") + ")"
     keyGroups.push(keyGroupHtml);
   });
-  $('#filter-active-text').html('ACTIVE FILTERS: ' + keyGroups.join(" <small>AND</small> "));
+  $('#filter-active-text').html(keyGroups.join(" <small>AND</small> "));
   // # filter the data
   var filterKeyCount = filterData.length;
   filteredData = data.filter(function(d){
     var passCount = 0;
     var project = d;
+    if(d.budget >= minBudget && d.budget <= maxBudget){
     $.each(filterData,function(iKey, filterKey){
       var pass = false;
       var thisKey = filterKey.key;
@@ -65,6 +71,7 @@ function filter(){
     });
     // # if all filter keys are passed, the project passes the filtering
     return passCount === filterKeyCount;
+    }
   })
 
   drawTimeline()
@@ -109,6 +116,30 @@ function fetchData(){
 }
 
 function buildFilters(){
+  // # build a slider for budget range filter
+  var budgetRange = [ 0, Math.ceil((d3.max(data, function(d) { return d.budget }) / 100000)) * 100000 ];
+  noUiSlider.create(sliderBudgetRange, {
+    start: budgetRange,
+    connect: true,
+    margin: 50000,
+    step: 25000,
+    range: {
+      'min': budgetRange[0],
+      'max': budgetRange[1]
+    }
+  });
+
+  sliderBudgetRange.noUiSlider.on('update',function(values, handle, unencoded){
+    $('#slider-min-text').html(currency(values[0]));
+    $('#slider-max-text').html(currency(values[1]));
+
+  });
+  sliderBudgetRange.noUiSlider.on('set', function(values, handle, unencoded){
+    $('#slider-min-text').html(currency(values[0]));
+    $('#slider-max-text').html(currency(values[1]));
+    filter();
+  });
+
   // # get the unique values from the data for all our filter fields
   var regionArray = [],
       countryArray = [],
@@ -351,9 +382,6 @@ function drawTimeline(){
           d.values.totalprj ++;
         })
     });
-
-    console.log(graphData.length);
-
 
     // Use x.domain to filter the data, then find the max and min duration of this new set, then set y.domain to that
     var dataDateFiltered = graphData.filter(function(d, i) {
