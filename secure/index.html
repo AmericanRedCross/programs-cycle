@@ -26,13 +26,83 @@
 <div class="container">
   <h1>Program / Project Life Cycle</h1>
 
+<div id="filter-active-text">ACTIVE FILTERS: </div><br>
+
+<div id="filter-choices" class="row">
+
+    <button class="btn btn-default btn-xs btn-filter-collapse" type="button" data-toggle="collapse" data-target="#collapse-filter-region" aria-expanded="false" aria-controls="collapse-filter-region">
+    ISD region filter(s)
+    </button>
+    <button class="btn btn-default btn-xs btn-filter-collapse" type="button" data-toggle="collapse" data-target="#collapse-filter-country" aria-expanded="false" aria-controls="collapse-filter-country">
+    Country filter(s)
+    </button>
+    <button class="btn btn-default btn-xs btn-filter-collapse" type="button" data-toggle="collapse" data-target="#collapse-filter-donor" aria-expanded="false" aria-controls="collapse-filter-donor">
+    Donor filter(s)
+    </button>
+    <button class="btn btn-default btn-xs btn-filter-collapse" type="button" data-toggle="collapse" data-target="#collapse-filter-sector" aria-expanded="false" aria-controls="collapse-filter-sector">
+    Sector filter(s)
+    </button>
+    <button class="btn btn-default btn-xs btn-filter-collapse" type="button" data-toggle="collapse" data-target="#collapse-filter-businessunit" aria-expanded="false" aria-controls="collapse-filter-businessunit">
+    Business unit filter(s)
+    </button>
+    &nbsp; &nbsp; <a onclick="clearAllCheckboxes();"><i class="fa fa-trash-o"></i> clear ALL filters</a>
+
+    <div class="collapse" id="collapse-filter-region">
+    <div class="well">
+      <div>ISD regions &nbsp; <a onclick="clearCheckboxes(this);"><small><i class="fa fa-trash-o"></i> clear category filters</small></a>
+        <div class="filter-checkboxes">
+            <!-- checkboxes go here  -->
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="collapse" id="collapse-filter-country">
+    <div class="well">
+      <div>Countries &nbsp; <a onclick="clearCheckboxes(this);"><small><i class="fa fa-trash-o"></i> clear category filters</small></a>
+        <div class="filter-checkboxes">
+          <!-- checkboxes go here  -->
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="collapse" id="collapse-filter-donor">
+    <div class="well">
+      <div>Donors &nbsp; <a onclick="clearCheckboxes(this);"><small><i class="fa fa-trash-o"></i> clear category filters</small></a>
+        <div class="filter-checkboxes">
+            <!-- checkboxes go here  -->
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="collapse" id="collapse-filter-sector">
+    <div class="well">
+      <div>Sectors &nbsp; <a onclick="clearCheckboxes(this);"><small><i class="fa fa-trash-o"></i> clear category filters</small></a>
+        <div class="filter-checkboxes">
+            <!-- checkboxes go here  -->
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="collapse" id="collapse-filter-businessunit">
+    <div class="well">
+      <div>Business units &nbsp; <a onclick="clearCheckboxes(this);"><small><i class="fa fa-trash-o"></i> clear category filters</small></a>
+        <div class="filter-checkboxes">
+            <!-- checkboxes go here  -->
+        </div>
+      </div>
+    </div>
+    </div>
+
+</div> <!-- / #filter-choices.row -->
+
+
 <h3>Total approved budget funding and number of recorded projects</h3>
 <div id="timeline-graph" style="width:100%;"></div>
 
 <hr>
 
 <div class="row">
-  <h3>Approved funding by source</h3>
+  <h3>Approved funding by donor</h3>
 <div class="col-xs-3">
   <div id="startDateTxt"><h5><span></span></h5></div>
   <div id="donorStartPie"></div>
