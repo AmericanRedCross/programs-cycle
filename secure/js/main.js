@@ -1,6 +1,5 @@
 var data, filteredData;
 var sliderBudgetRange = document.getElementById('slider-budget-range');
-var minDateFilter, maxDateFilter;
 // HELPERS
 var parseDate = d3.time.format('%m/%d/%Y').parse;
 var dateString = d3.time.format("%d %b %Y");
@@ -17,10 +16,8 @@ var businessColor = d3.scale.category20()
 
 var activeFilters = []
 function filter(){
-  // # what's the budge range?
-  var sliderValues = sliderBudgetRange.noUiSlider.get();
-  var minBudget = parseInt(sliderValues[0]);
-  var maxBudget = parseInt(sliderValues[1]);
+  // # what's the budge minimum?
+  var minBudget = parseInt(sliderBudgetRange.noUiSlider.get());
   // # look at all the checkboxes and record whats checked
   activeFilters = []
   checkboxes = $("#filter-choices input[type=checkbox]");
@@ -59,7 +56,7 @@ function filter(){
   filteredData = data.filter(function(d){
     var passCount = 0;
     var project = d;
-    if(d.budget >= minBudget && d.budget <= maxBudget){
+    if(d.budget >= minBudget){
     $.each(filterData,function(iKey, filterKey){
       var pass = false;
       var thisKey = filterKey.key;
@@ -117,26 +114,22 @@ function fetchData(){
 
 function buildFilters(){
   // # build a slider for budget range filter
-  var budgetRange = [ 0, Math.ceil((d3.max(data, function(d) { return d.budget }) / 100000)) * 100000 ];
   noUiSlider.create(sliderBudgetRange, {
-    start: budgetRange,
-    connect: true,
-    margin: 50000,
-    step: 25000,
+    start: 0,
+    connect: false,
     range: {
-      'min': budgetRange[0],
-      'max': budgetRange[1]
+      'min': [ 0, 25000],
+      '10%': [ 100000, 50000],
+      '50%': [ 500000, 100000],
+      'max': [ 1000000]
     }
   });
 
   sliderBudgetRange.noUiSlider.on('update',function(values, handle, unencoded){
-    $('#slider-min-text').html(currency(values[0]));
-    $('#slider-max-text').html(currency(values[1]));
-
+    $('#slider-min-text').html(currency(values[handle]));
   });
   sliderBudgetRange.noUiSlider.on('set', function(values, handle, unencoded){
-    $('#slider-min-text').html(currency(values[0]));
-    $('#slider-max-text').html(currency(values[1]));
+    $('#slider-min-text').html(currency(values[handle]));
     filter();
   });
 

@@ -1,27 +1,5 @@
-/*.bar {
-  fill: steelblue;
-}
-
-.bar:hover {
-  fill: brown;
-}
-
-.axis {
-  font: 10px sans-serif;
-}
-
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.x.axis path {
-  display: none;
-}*/
-.noUi-connect {
-  background: #dd4f53;
+#slider-budget-range{
+  width: 50%;
 }
 .btn-filter-collapse {
   margin-bottom: 8px;
