@@ -21,14 +21,42 @@
   </head>
   <body>
 
+    <div id="info-modal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Major Recovery Programs</h4>
+          </div>
+          <div class="modal-body">
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
   <div id="tooltip"></div>
 
 <div class="container">
   <h1>Program / Project Life Cycle</h1>
 
-
-  <p><u>BUDGET RANGE</u>: <span id="slider-min-text">x</span>+</p>
-  <p><div id="slider-budget-range"></div></p>
+<div class="row">
+  <div class="col-sm-6">
+    <p><u>BUDGET RANGE</u>: <span id="slider-min-text">x</span>+</p>
+    <p><div id="slider-budget-range"></div></p>
+  </div>
+  <div class="col-sm-6">
+    <p><u>SHOW/ HIDE MAJOR RECOVERY PROGRAMS</u>:</p>
+    <span class="recovery-toggle" onclick="toggleRecovery(this);"><i class="fa fa-toggle-on fa-fw fa-recovery-toggle-master"></i> <span>ALL</span></span> &nbsp; | &nbsp;
+    <span class="recovery-toggle recovery-toggle-tt hti" onclick="toggleRecovery(this);"><i id="filter-hti" class="fa fa-toggle-on fa-fw fa-recovery-toggle"></i> <span>Haiti</span></span> <i onClick="$('#info-modal').modal();" class="fa fa-info-circle modal-launch"></i>  &nbsp; | &nbsp;
+    <span class="recovery-toggle recovery-toggle-tt phl" onclick="toggleRecovery(this);"><i id="filter-phl" class="fa fa-toggle-on fa-fw fa-recovery-toggle"></i> <span>Philippines</span></span> <i onClick="$('#info-modal').modal();" class="fa fa-info-circle modal-launch"></i> &nbsp; | &nbsp;
+    <span class="recovery-toggle recovery-toggle-tt npl" onclick="toggleRecovery(this);"><i id="filter-npl" class="fa fa-toggle-on fa-fw fa-recovery-toggle"></i> <span>Nepal</span></span> <i onClick="$('#info-modal').modal();" class="fa fa-info-circle modal-launch"></i>
+  </div>
+</div>
 
   <p><u>ACTIVE FILTERS</u>: <span id="filter-active-text"></span></p>
 

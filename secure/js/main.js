@@ -1,3 +1,66 @@
+// Names of Recovery Programs for custom filter
+var nplRecoveryArray = [
+  "FY16 Targeted Research Learning Study in Nepal with Core 2106",
+  "Nepal Early Recovery WASH Program (TT&WF Chao Foundation)",
+  "Nepal Earthquake Emergency Response Program with OFDA",
+  "Nepal Earthquake Recovery Program - Utthan",
+  "Nepal Program"
+];
+var phlRecoveryArray = [
+  "CRS Anibong Shelter & Settlements",
+  "Early Recovery Assistance to Populations Affected by Typhoon Haiyan - GRC Leyte",
+  "Early Recovery Assistance to Populations Affected by Typhoon Haiyan - GRC N.Cebu",
+  "Integrated Recovery Intervention in Tolosa, Philippines with Spanish Red Cross",
+  "Philippines Program",
+  "RFA - Australian RC - Typhoon Haiyan Recovery Program",
+  "RFA - Netherlands RC - Strengthening Community Resilience of Haiyan-affected Pop",
+  "RFA - Norwegian RC - Typhoon Haiyan Recovery Program",
+  "TTL - Yolanda Recovery Program in Leyte Province, Philippines 2014 - 2017"
+];
+var htiRecoveryArray = [
+  "2017 Earthquake Recovery Learning Conference",
+  "Canaan Social Engagement Program",
+  "Canaan Upgrading and Community Development Program with USAID",
+  "Caribbean Domestic Violence and Gender Equality Conference",
+  "Cholera Prevention and Response in the North Departments through HRC",
+  "Cholera Prevention and Response through FRC",
+  "Cholera Prevention and Response through NRC",
+  "Cholera Prevention and Response through SRC",
+  "Cholera Treatment and Health Service Delivery through HOPE",
+  "Community Support to Children Affected by HIV through MAEC (CIF)",
+  "Direct Implementation (LAMIKA Pillar 1)",
+  "Directly Implemented Gran No Pi Djanm",
+  "Economic Development and Livelihoods through Mercy Corps (LAMIKA Pillar 2)",
+  "Economic Strengthening and Livelihoods Improvement in NW Haiti through PADF",
+  "Economic Strengthening and Livelihoods Improvement through CECI",
+  "EkoLakay Social Business Pilot in Port-au-Prince through SOIL",
+  "Empowering Young Women to Lead Transformative Change YWCA (CIF)",
+  "Enhanced Health Service Delivery Program",
+  "From Camp Transformation to Urban Revitalization (CATUR) though UN Habitat",
+  "FY16 Targeted Research Learning Study in Haiti with Core 2106",
+  "Gender-based Violence Prevention through IRC (Phase 1 and 2)",
+  "Gran No Pi Djanm",
+  "Haiti Measles and Rubella Initiative (MRI) through HRC",
+  "Haitian Red Cross Asset Development Program",
+  "Haitian Red Cross Post Construction with USAID (CUCD)",
+  "Haitian Youth Development Program",
+  "HRC Response to Migrant Deportation ‰ÛÒ Phase I (QAF)",
+  "Improving First Aid and Emergency Health Services in Canaan through HRC",
+  "Institutional Change and Development Program with HRC",
+  "LAMIKA Program",
+  "Livelihood Opportunities for Youth through IDEJEN (YOUTH)",
+  "Nou pap kanpe! - We do not stop! through AVSI (YOUTH)",
+  "Operational Support for the National Blood Transfusion Service through HRC",
+  "Participatory Urban Development and Livelihoods through USAID (CUCD)",
+  "Physical Renewal Project through Global Communities (LAMIKA Pillar 3)",
+  "PrevSIDA Program",
+  "Project Agreement between ARC and HRC for Gran No Pi Djanm",
+  "Salary Support Grant Letter for HRC",
+  "Shelter Retrofit for Rental through CARE",
+  "St. Michel Hospital Reconstruction in Jacmel through CRC",
+  "Upgrading and Rehabilitation of Evacuation Shelters in the North through PADF"
+];
+
 var data, filteredData;
 var sliderBudgetRange = document.getElementById('slider-budget-range');
 // HELPERS
@@ -16,8 +79,16 @@ var businessColor = d3.scale.category20()
 
 var activeFilters = []
 function filter(){
-  // # what's the budge minimum?
+  // # what's the budget minimum?
   var minBudget = parseInt(sliderBudgetRange.noUiSlider.get());
+  // # any recovery programs filtered out?
+  var filteredRecovery = [];
+  if(d3.select('#filter-hti').classed('fa-toggle-off')){
+    filteredRecovery = filteredRecovery.concat(htiRecoveryArray); }
+  if(d3.select('#filter-phl').classed('fa-toggle-off')){
+    filteredRecovery = filteredRecovery.concat(phlRecoveryArray); }
+  if(d3.select('#filter-npl').classed('fa-toggle-off')){
+    filteredRecovery = filteredRecovery.concat(nplRecoveryArray); }
   // # look at all the checkboxes and record whats checked
   activeFilters = []
   checkboxes = $("#filter-choices input[type=checkbox]");
@@ -56,7 +127,7 @@ function filter(){
   filteredData = data.filter(function(d){
     var passCount = 0;
     var project = d;
-    if(d.budget >= minBudget){
+    if(d.budget >= minBudget && $.inArray(d.name, filteredRecovery) === -1){
     $.each(filterData,function(iKey, filterKey){
       var pass = false;
       var thisKey = filterKey.key;
@@ -84,6 +155,27 @@ function clearAllCheckboxes(){
   var allCheckboxes = $.find("input:checkbox");
   $.each(allCheckboxes, function(i, box){ $(box).prop('checked',false); });
   filter();
+}
+
+function toggleRecovery(el){
+  var toggle = d3.select(el).select('i');
+  if(toggle.classed('fa-recovery-toggle-master')){
+    if(toggle.classed('fa-toggle-on')){
+      toggle.classed({'fa-toggle-on':false, 'fa-toggle-off':true});
+      d3.selectAll('.fa-recovery-toggle').classed({'fa-toggle-on':false, 'fa-toggle-off':true});
+    } else {
+      toggle.classed({'fa-toggle-on':true, 'fa-toggle-off':false});
+      d3.selectAll('.fa-recovery-toggle').classed({'fa-toggle-on':true, 'fa-toggle-off':false})
+    }
+  } else {
+    if(toggle.classed('fa-toggle-on')){
+      toggle.classed({'fa-toggle-on':false, 'fa-toggle-off':true});
+    } else {
+      toggle.classed({'fa-toggle-on':true, 'fa-toggle-off':false});
+    }
+  }
+  filter();
+
 }
 
 function resize() {
@@ -132,6 +224,15 @@ function buildFilters(){
     $('#slider-min-text').html(currency(values[handle]));
     filter();
   });
+
+  // modal to list recovery projects associated with each country
+  var modalHtml = '<h4>Haiti recovery projects</h4><small>' +
+    htiRecoveryArray.sort(d3.ascending).join("<br>") + '</small>' +
+    '<h4>Philippines recovery projects</h4><small>' +
+    phlRecoveryArray.sort(d3.ascending).join("<br>") + '</small>' +
+    '<h4>Nepal recovery projects</h4><small>' +
+    nplRecoveryArray.sort(d3.ascending).join("<br>") + '</small>';
+  $('#info-modal .modal-body').html(modalHtml);
 
   // # get the unique values from the data for all our filter fields
   var regionArray = [],

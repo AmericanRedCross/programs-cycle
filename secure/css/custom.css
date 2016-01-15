@@ -1,5 +1,12 @@
 #slider-budget-range{
-  width: 50%;
+  width: 100%;
+}
+.recovery-toggle {
+  cursor: pointer;
+}
+.modal-launch {
+  cursor: pointer;
+  color: #9f9fa3;
 }
 .btn-filter-collapse {
   margin-bottom: 8px;
