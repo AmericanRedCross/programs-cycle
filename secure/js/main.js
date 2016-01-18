@@ -303,11 +303,16 @@ function buildFilters(){
 
 
 
-var minDate, maxDate, brush, yTl, yPrjTl, y2Tl, yAxisTl, yAxisPrjTl, linePrjTl, areaTl, area2Tl, focusTl, contextTl, xTl, xAxisTl
+var minDate, maxDate, yearRange, brush, yTl, yPrjTl, y2Tl, yAxisTl, yAxisPrjTl, linePrjTl, areaTl, area2Tl, focusTl, contextTl, xTl, xAxisTl
 function buildTimeline(){
 
   minDate = d3.time.week.floor(d3.min(data, function(d) { return d.start }));
   maxDate = d3.time.week.ceil(d3.max(data, function(d) { return d.end }));
+
+  yearRange = d3.time.year.range(d3.time.year.floor(minDate), maxDate)
+  yearRange.forEach(function(d){
+    d.setMonth(6)
+  });
 
   var tlmargin = {top: 10, right: 35, bottom: 60, left: 80},
     tlmargin2 = {top: 370, right: 35, bottom: 20, left: 80},
@@ -332,17 +337,18 @@ function buildTimeline(){
       .on("brush", brushed);
 
   linePrjTl = d3.svg.line()
+      .interpolate("basis")
       .x(function(d) { return xTl(new Date(d.key)); })
       .y(function(d) { return yPrjTl(d.values.totalprj); });
 
   areaTl = d3.svg.area()
-      .interpolate("step")
+      .interpolate("basis")
       .x(function(d) { return xTl(new Date(d.key)); })
       .y0(tlheight)
       .y1(function(d) { return yTl(d.values.totalbudget); });
 
   area2Tl = d3.svg.area()
-      .interpolate("step")
+      .interpolate("basis")
       .x(function(d) { return x2(new Date(d.key)); })
       .y0(tlheight2)
       .y1(function(d) { return y2Tl(d.values.totalbudget); });
@@ -373,6 +379,14 @@ function buildTimeline(){
   focusTl.append("path")
     .attr("class", "prj-line");
 
+  focusTl.selectAll("line").data(yearRange).enter().append('line')
+      .attr('class', 'fiscalMark-focus')
+      .attr('x1', xTl)
+      .attr('y1', 0)
+      .attr('x2', xTl)
+      .attr('y2', tlheight)
+      .attr('stroke-dasharray', '3,5').style("stroke-width", 3).style("stroke", "rgba(159, 159, 163, 0.7)").style("fill", "none")
+
   focusTl.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + tlheight + ")");
@@ -387,6 +401,13 @@ function buildTimeline(){
   contextTl.append("path")
     .attr("class", "area");
 
+  contextTl.selectAll("line").data(yearRange).enter().append('line')
+      .attr('class', 'fiscalMark-context')
+      .attr('x1', xTl)
+      .attr('y1', 0)
+      .attr('x2', function(d){ return xTl(d); })
+      .attr('y2', tlheight2)
+      .attr('stroke-dasharray', '1,1').style("stroke-width", 3).style("stroke", "#9f9fa3").style("fill", "none")
 
   contextTl.append("g")
     .attr("class", "x axis")
@@ -459,8 +480,6 @@ function buildPies(){
   brush.event(d3.select(".brush").transition());
   // http://bl.ocks.org/timelyportfolio/5c136de85de1c2abb6fc
 
-  // drawTimeline(defaultDateRange);
-
 }
 
 function drawTimeline(){
@@ -486,6 +505,7 @@ function drawTimeline(){
     yPrjTl.domain([0, d3.max(dataDateFiltered.map(function(d) { return d.values.totalprj; }))]);
     focusTl.select(".area").datum(graphData).transition().duration(1500).ease("sin-in-out").attr("d", areaTl);
     focusTl.select(".prj-line").datum(graphData).transition().duration(1500).ease("sin-in-out").attr("d", linePrjTl);
+    focusTl.selectAll(".fiscalMark-focus").transition().duration(1500).ease("sin-in-out").attr('x1', xTl).attr('x2', xTl)
     focusTl.select(".x.axis").call(xAxisTl);
     focusTl.select(".y.axis").transition().duration(1500).ease("sin-in-out").call(yAxisTl);
     focusTl.select(".yPrj.axis").transition().duration(1500).ease("sin-in-out").call(yAxisPrjTl);
@@ -823,7 +843,7 @@ function drawCalendar(){
 
   var bar = calendarGraph.selectAll('.calendar-prj')
     .data(calendarData).enter().append('g')
-    .attr("transform", function(d, i) { return "translate(" + margin.left + "," + (i * barheight + margin.top) + ")"; })
+    .attr("transform", function(d, i) { return "translate(" + 0 + "," + (i * barheight + margin.top) + ")"; })
   bar.append('rect')
     .attr("x", function(d) { return x(d.start); })
     .attr("width", function(d){ return x(d.end) - x(d.start) })
@@ -844,6 +864,14 @@ function drawCalendar(){
     .attr("y", barheight / 2)
     .attr("dy", ".35em")
     .text(function(d) { return d.name; });
+
+    d3.select('#calendar-graph').select('svg').selectAll(".calendar-graph-fiscal-mark").data(yearRange).enter().append('line')
+        .attr('class', 'calendar-graph-fiscal-mark')
+        .attr('x1', x)
+        .attr('y1', barheight)
+        .attr('x2', x)
+        .attr('y2', (barheight * calendarData.length) + margin.top + margin.bottom)
+        .attr('stroke-dasharray', '3,5').style("stroke-width", 2).style("stroke", "rgba(159, 159, 163, 0.8)").style("fill", "none")
 
 
 
