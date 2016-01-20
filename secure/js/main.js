@@ -1,10 +1,14 @@
 // Names of Recovery Programs for custom filter
 var nplRecoveryArray = [
+  "Community Action for Disaster Response (CADRE) in Nepal",
+  "Developing Community Resilience in Nepal - ON HOLD",
   "FY16 Targeted Research Learning Study in Nepal with Core 2106",
   "Nepal Early Recovery WASH Program (TT&WF Chao Foundation)",
   "Nepal Earthquake Emergency Response Program with OFDA",
+  "Nepal Earthquake Immediate Response",
   "Nepal Earthquake Recovery Program - Utthan",
-  "Nepal Program"
+  "Nepal Program",
+  "Nepal Winterization CTP Program"
 ];
 var phlRecoveryArray = [
   "CRS Anibong Shelter & Settlements",
@@ -44,20 +48,24 @@ var htiRecoveryArray = [
   "Haitian Red Cross Asset Development Program",
   "Haitian Red Cross Post Construction with USAID (CUCD)",
   "Haitian Youth Development Program",
-  "HRC Response to Migrant Deportation ‰ÛÒ Phase I (QAF)",
+  "HRC Response to Migrant Deportation Š—– Phase I (QAF)",
   "Improving First Aid and Emergency Health Services in Canaan through HRC",
   "Institutional Change and Development Program with HRC",
+  "IT Capacity Building in Port-au-Prince and Cit’© Soleil through HELP (CIF)",
   "LAMIKA Program",
   "Livelihood Opportunities for Youth through IDEJEN (YOUTH)",
+  "North Community Based Watsan Project through Haiti Outreach",
   "Nou pap kanpe! - We do not stop! through AVSI (YOUTH)",
   "Operational Support for the National Blood Transfusion Service through HRC",
   "Participatory Urban Development and Livelihoods through USAID (CUCD)",
   "Physical Renewal Project through Global Communities (LAMIKA Pillar 3)",
   "PrevSIDA Program",
   "Project Agreement between ARC and HRC for Gran No Pi Djanm",
+  "Restoring Family Links Services through HRC",
   "Salary Support Grant Letter for HRC",
   "Shelter Retrofit for Rental through CARE",
   "St. Michel Hospital Reconstruction in Jacmel through CRC",
+  "Support to Livelihood Resilience (North and Northeast) through CECI",
   "Upgrading and Rehabilitation of Evacuation Shelters in the North through PADF"
 ];
 
@@ -188,10 +196,37 @@ function resize() {
   buildTimeline();
 }
 
+function donorShorten(donor){
+  switch (donor) {
+    case 'American Red Cross,Anne Ray Charitable Trust (ARCT)':
+    case 'Anne Ray Charitable Trust (ARCT)':
+      return 'ARCT';
+      break;
+    case 'American Red Cross,Office of U.S. Foreign Disaster Assistance (OFDA)':
+    case 'Office of U.S. Foreign Disaster Assistance (OFDA)':
+    case 'Office of U.S. Foreign Disaster Assistance (OFDA),American Red Cross':
+      return 'OFDA';
+      break;
+    case 'American Red Cross':
+      return 'ARC';
+      break;
+    case 'U.S. Department of State Bureau of Population, Refugees, and Migration (PRM)':
+      return 'PRM';
+      break;
+    case 'video':
+      return ;
+      break;
+    default:
+      return donor;
+      break;
+  }
+}
+
 function fetchData(){
-  d3.csv('data/data-rough.csv', function (rows) {
+  d3.csv('data/data.csv', function (rows) {
     data = rows;
     data.forEach(function(d) {
+      d.donor = donorShorten(d.donor);
       d.start = parseDate(d.start);
       d.end = parseDate(d.end);
       d.budget = +d.budget;
@@ -260,11 +295,11 @@ function buildFilters(){
 
   });
   // # alphabetize them arrays
-  regionArray.sort(d3.ascending())
-  countryArray.sort(d3.ascending())
-  donorArray.sort(d3.ascending())
-  sectorArray.sort(d3.ascending())
-  businessunitArray.sort(d3.ascending())
+  regionArray.sort(d3.ascending)
+  countryArray.sort(d3.ascending)
+  donorArray.sort(d3.ascending)
+  sectorArray.sort(d3.ascending)
+  businessunitArray.sort(d3.ascending)
   // # add the checkbox elements to each collapse well element
   d3.select('#collapse-filter-region .filter-checkboxes').selectAll('div').data(regionArray).enter()
     .append('div').attr('class', 'checkbox').html(function(d){
