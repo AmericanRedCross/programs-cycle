@@ -363,7 +363,9 @@ function buildTimeline(){
   y2Tl = d3.scale.linear().range([tlheight2, 0]);
 
   xAxisTl = d3.svg.axis().scale(xTl).orient("bottom");
-  var xAxis2 = d3.svg.axis().scale(x2).orient("bottom");
+  var xAxis2 = d3.svg.axis().scale(x2).orient("bottom")
+    .tickValues(yearRange)
+    .tickFormat(function(d){ return "FY" + (d.getFullYear() + 1).toString().slice(2); });
   yAxisTl = d3.svg.axis().scale(yTl).orient("left");
   yAxisPrjTl = d3.svg.axis().scale(yPrjTl).orient("right");
 
