@@ -845,21 +845,54 @@ drawCalendar();
 
 }
 
+
+function changeSort(newSort){
+  sortType = newSort;
+  drawCalendar();
+}
+function changeColor(newColor){
+  colorType = newColor;
+  drawCalendar();
+}
+
+var sortType = 'budget';
+var colorType = 'donor';
+
 function drawCalendar(){
 
-
+  $('#sortBy').html(sortType);
+  $('#colorBy').html(colorType);
   d3.select('#calendar-graph').select('svg').remove();
 
   var calendarData = filteredData.filter(function(d){
     return ((d.start < endDate && d.end >= endDate) || (d.start < startDate && d.end >= startDate) || (d.start <= startDate && d.end >= endDate) || (d.start >= startDate && d.end <= endDate));
-  }).sort(function(a, b) {
-    return b.budget - a.budget;
   })
+
+  if(sortType === 'donor'){
+    calendarData.sort(function(a, b) {
+      return d3.ascending(a.donor[0], b.donor[0]);
+    });
+  } else if (sortType === 'businessunit') {
+    calendarData.sort(function(a, b) {
+      return d3.ascending(a.businessunit[0], b.businessunit[0]);
+    });
+  } else if (sortType === 'budget'){
+    calendarData.sort(function(a, b) {
+      return b.budget - a.budget;
+    })
+  } else if (sortType === 'country'){
+    calendarData.sort(function(a, b) {
+      return d3.ascending(a.countries[0], b.countries[0]);
+    })
+  }
+
 
   var margin = {top: 25, right: 10, bottom: 10, left: 10},
       width = $('#calendar-graph').innerWidth(),
       barheight = 20,
       calendarGraph = d3.select('#calendar-graph').append('svg');
+
+  $('#calendar-graph').height((barheight * calendarData.length) + margin.top + margin.bottom);
 
   calendarGraph.attr("width", width + margin.left + margin.right)
     .attr("height", (barheight * calendarData.length) + margin.top + margin.bottom)
@@ -885,11 +918,21 @@ function drawCalendar(){
     .attr("x", function(d) { return x(d.start); })
     .attr("width", function(d){ return x(d.end) - x(d.start) })
     .attr("height", barheight - 1)
-    .attr("fill", function(d){ return donorColor(d.donor) })
+    .attr("fill", function(d){
+      if(colorType === 'donor'){
+        return donorColor(d.donor[0]);
+      } else if (colorType === 'businessunit') {
+        return businessColor(d.businessunit[0]);
+      }
+    })
     .on("mouseover", function(d){
         var tooltipText = '<small><u>' + d.name + ' </u></br>' +
         '<b>start:</b> ' + dateString(d.start) + ' <b>/ end:</b> ' + dateString(d.end) + '<br>' +
         '<b>donor:</b> ' + d.donor + '<br>' +
+        '<b>business unit:</b> ' + d.businessunit.join(', ') + '<br>' +
+        '<b>sectors:</b> ' + d.sector.join(', ') + '<br>' +
+        '<b>countries:</b> ' + d.countries.join(', ') + '<br>' +
+        '<b>region:</b> ' + d.isdregion.join(', ') + '<br>' +
         '<b>budget:</b> ' + currency(d.budget) + '</small>';
         $('#tooltip').append(tooltipText);
       })

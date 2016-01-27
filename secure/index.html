@@ -166,6 +166,17 @@
 </div>
 
 <hr>
+Sort by: <b><span id="sortBy"></span></b> &nbsp;
+<span class="btn btn-default btn-xs" onclick="changeSort('donor');"><i class="fa fa-sort"></i> Donor</span>
+<span class="btn btn-default btn-xs" onclick="changeSort('businessunit');"><i class="fa fa-sort"></i> Business unit</span>
+<span class="btn btn-default btn-xs" onclick="changeSort('budget');"><i class="fa fa-sort"></i> Budget</span>
+<span class="btn btn-default btn-xs" onclick="changeSort('country');"><i class="fa fa-sort"></i> Country (first, if multiple)</span>
+&nbsp; / &nbsp;
+Color by: <b><span id="colorBy"></span></b> &nbsp;
+<span class="btn btn-default btn-xs" onclick="changeColor('donor');"><i class="fa fa-sort"></i> Donor</span>
+<span class="btn btn-default btn-xs" onclick="changeColor('businessunit');"><i class="fa fa-sort"></i> Business unit</span>
+
+
 
 <div class="row">
   <div id="calendar-graph" style="width:100%"><svg></svg></div>
