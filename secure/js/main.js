@@ -424,6 +424,12 @@ function buildTimeline(){
       .attr('y2', tlheight)
       .attr('stroke-dasharray', '3,5').style("stroke-width", 3).style("stroke", "rgba(159, 159, 163, 0.7)").style("fill", "none")
 
+  focusTl.selectAll("text").data(yearRange).enter().append('text')
+    .attr('class', 'fiscalMark-label')
+    .attr('x', -60)
+    .attr('y', tlheight - 6)
+    .text(function(d){ return "FY" + (d.getFullYear() + 1).toString().slice(2); })
+
   focusTl.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + tlheight + ")");
@@ -543,6 +549,7 @@ function drawTimeline(){
     focusTl.select(".area").datum(graphData).transition().duration(1500).ease("sin-in-out").attr("d", areaTl);
     focusTl.select(".prj-line").datum(graphData).transition().duration(1500).ease("sin-in-out").attr("d", linePrjTl);
     focusTl.selectAll(".fiscalMark-focus").transition().duration(1500).ease("sin-in-out").attr('x1', xTl).attr('x2', xTl)
+    focusTl.selectAll(".fiscalMark-label").transition().duration(1500).ease("sin-in-out").attr('x', function(d){ return xTl(d)+12})
     focusTl.select(".x.axis").call(xAxisTl);
     focusTl.select(".y.axis").transition().duration(1500).ease("sin-in-out").call(yAxisTl);
     focusTl.select(".yPrj.axis").transition().duration(1500).ease("sin-in-out").call(yAxisPrjTl);

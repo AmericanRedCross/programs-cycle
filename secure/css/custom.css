@@ -44,6 +44,10 @@ svg {
 .fiscalMark-focus {
   clip-path: url(#clip);
 }
+.fiscalMark-label {
+  clip-path: url(#clip);
+  font-weight:bold;
+}
 .y.axis {
   fill: #dd4f53;
 }
